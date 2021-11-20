@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style/style.css">
+    <script src="minesweeper.js"></script>
+</head>
+<body>
+
+    <div id="info">
+        <h1>Minesweeper</h1>
+        <p>You have 5 minutes to locate all of the bombs!</p>
+        <div id="victory">
+            Victory!
+            <p>Refresh to restart</p>
+        </div>
+        <div id="game-over">
+            Game over
+            <p>Refresh to restart</p>
+        </div>
+    </div>
+
+    <div class="main-field" id="main">
+        
+    </div>
+
+    <div id="timer">
+        05:01
+    </div>
+
+    <div id="radio-buttons-div">
+            <div>
+                <input type="radio" id="click" name="move-type" checked>
+            <label for="click">Click</label>
+            </div>
+          
+            <div>
+                <input type="radio" id="sign" name="move-type">
+            <label for="sign">Sign(click again to unsign)</label>
+            </div>
+            <ul>
+                <li>Check "Click" if you want to reveal tiles.</li>
+                <li>Check "Sign" if you want to mark potential bomb tiles.</li>
+            </ul>
+    </div>
+    
+</body>
+</html>

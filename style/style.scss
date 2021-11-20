@@ -1,0 +1,59 @@
+body {
+    background-color: gray;
+}
+
+.main-field {
+    border: 0.2em solid black;
+    height: 33.3em;
+    width: 33.3em;
+    margin-left: 20em;
+    margin-right: 20em;
+    position: absolute;
+}
+
+.btn {
+    width: 5em;
+    height: 5em;
+}
+
+#info {
+    position: absolute;
+}
+
+#game-over {
+    display: none;
+    position: absolute;
+    top: 20em;
+    font-size: 1.5em;
+
+    p {
+        font-size: 0.7em;
+    }
+}
+
+#victory {
+    display: none;
+    position: absolute;
+    top: 20em;
+    font-size: 1.5em;
+
+    p {
+        font-size: 0.7em;
+    }
+}
+
+#timer {
+    position: absolute;
+    left: 50em;
+    top: 5em;
+    font-size: 1.2em;
+}
+
+
+#radio-buttons-div {
+    position: absolute;
+    left: 55em;
+    top: 10em;
+}
+
+
