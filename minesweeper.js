@@ -1,6 +1,11 @@
 window.onload = function() {
 
     field = document.getElementById("main");
+    fieldTileDim = 8;
+
+    // console.log(window.innerWidth, window.innerHeight);
+
+    drawGrid();
 
     gameOverFlague = false;
 
@@ -10,121 +15,135 @@ window.onload = function() {
 
     timer = document.getElementById("timer");
 
-    isSigning = document.getElementById("sign");
-
-    var k  = 0;
-
-    for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
-        var btn = document.createElement("BUTTON");
-        btn.setAttribute("id", String(k));
-        btn.setAttribute("class", "btn");
-        btn.style.position = "absolute";
-        btn.style.top = i*5+"em";
-        btn.style.left = j*5+"em";
-        btn.onclick = clickBtn;
-
-        field.appendChild(btn);
-        k += 1;
-        }
-      }
-    isBombArray = new Array(64).fill(false);
-    clickedBtn = new Array(64).fill(false);
-    minesweeperMap = new Array(64).fill(0);
+    bombArray = new Array(fieldTileDim**2).fill(0);
+    tileClicked = new Array(fieldTileDim**2).fill(false);
     bombsNumber = 10;
     bombsMarked = 0;
-    bombPositions = [];
+
+}
+
+window.oncontextmenu = function (){
+    return false; // cancel context menu appearence on right mouse button click
+}
+
+function drawGrid(){
+    var k = 0;
+    var tileEdgeLength = field.clientWidth/fieldTileDim;
+    for (let i = 0; i < fieldTileDim; i++) {
+        for (let j = 0; j < fieldTileDim; j++) {
+            var tile = document.createElement("div");
+            tile.setAttribute("id", String(k));
+            tile.setAttribute("class", "tile");
+            tile.style.position = "absolute";
+            tile.style.top = i*tileEdgeLength + "px";
+            tile.style.left = j*tileEdgeLength + "px";
+            tile.style.width = tileEdgeLength + "px";
+            tile.style.height = tileEdgeLength + "px";
+            tile.onmousedown = clickTile;
+
+            field.appendChild(tile);
+            k += 1;
+        }
+      }
+}
+
+function generateBombs(firstClickedTileId){
+    var bombPositions = [];
     while(bombPositions.length < bombsNumber){
         var r = Math.floor(Math.random() * 63);
-        if(bombPositions.indexOf(r) === -1) bombPositions.push(r);
+        if(bombPositions.indexOf(r) === -1 && firstClickedTileId !== r) bombPositions.push(r);
     }
 
-    for (let i = 0; i < bombsNumber; i++) {
-        isBombArray[bombPositions[i]] = true;
+    for (const bombIndex of bombPositions) {
+        bombArray[bombIndex] = -1;
     }
+}
 
-    btnNumbers = [];
+function assignTileNumbers(){
     for (let i = 0; i < 64; i++) {
-        let a = Math.floor(i / 8);
-        let b = i % 8;
+        let a = Math.floor(i / fieldTileDim);
+        let b = i % fieldTileDim;
 
-        let number = 0;
+        let number = -1;
         
-        if (isBombArray[i]) {
-            number = -1;
-        } else {
+        if (bombArray[i] !== -1) {
+            number = 0;
             for (let j = 0; j < btnSurroundings.length; j++) {
                 for (let k = 0; k < btnSurroundings.length; k++) {
-                    if (a + btnSurroundings[j] >= 0 && a + btnSurroundings[j] < 8 && b + btnSurroundings[k] >= 0 && b + btnSurroundings[k] < 8) {
-                        number += isBombArray[8*(a + btnSurroundings[j]) + b + btnSurroundings[k]];
+                    if (a + btnSurroundings[j] >= 0 && a + btnSurroundings[j] < fieldTileDim && b + btnSurroundings[k] >= 0 && b + btnSurroundings[k] < fieldTileDim) {
+                        number += bombArray[fieldTileDim*(a + btnSurroundings[j]) + b + btnSurroundings[k]] === -1;
                     }
                 }
             }
         }
-
-
-        btnNumbers.push(number);
+        bombArray[i] = number;
     }
-
 }
 
-function clickBtn() {
-    if (isSigning.checked && !gameOverFlague && !clickedBtn[this.id]) {
+
+function clickTile(event) {
+    if (event.button === 2 && !gameOverFlague && !tileClicked[this.id]) {
         if (this.innerHTML === "B") {
             this.innerHTML = "";
-            bombsMarked -= isBombArray[this.id];
+            bombsMarked -= bombArray[this.id] === -1;
         } else {
             this.innerHTML = "B";
-            bombsMarked += isBombArray[this.id];
+            bombsMarked += bombArray[this.id] === -1;
         }
         checkForVictory();
         return;
     }
-    if (!clickedBtn[this.id] && !gameOverFlague) {
-        click(this.id, false);
+
+    if (firstClick) {
+        firstClick = false;
+        startTimer(5 * 60, timer); 
+        generateBombs(parseInt(this.id));  
+        assignTileNumbers();
+        }
+
+    if (!tileClicked[this.id] && !gameOverFlague) {
+        click(this.id);
         if (gameOverFlague) {
             document.getElementById("game-over").style.display = "block";
             showAllBombs();
-        }
-        if (firstClick){
-            firstClick = false;
-            startTimer(5 * 60, timer);    
+            return;
         }
     }
     checkForVictory();
 }
 
-function click(id, isRecurrent) {
-    if (isBombArray[id] && !isRecurrent) {
+
+function click(id) {
+
+    if (tileClicked[id]) return;
+
+    if (bombArray[id] === -1) {
         var color = "red";
         document.getElementById(id).style.background = color;
         gameOverFlague = true;
-        clickedBtn[id] = true;
-    } else {
-        if (!isBombArray[id]) {
-            console.log("Hi");
-            if (!clickedBtn[id]) {
-                var color = "green";
-                document.getElementById(id).innerHTML = btnNumbers[id];
-                document.getElementById(id).style.background = color;
-                clickedBtn[id] = true;
-            }
-        }
+        tileClicked[id] = true;
+        return;
     }
-    if (btnNumbers[id] === 0) {
-        let a = Math.floor(id / 8);
-        let b = id % 8;
+
+    var color = "green";
+    document.getElementById(id).innerHTML = bombArray[id];
+    document.getElementById(id).style.background = color;
+    tileClicked[id] = true;
+
+    if (bombArray[id] === 0) {
+        let a = Math.floor(id / fieldTileDim);
+        let b = id % fieldTileDim;
+        
         for (let j = 0; j < btnSurroundings.length; j++) {
             for (let k = 0; k < btnSurroundings.length; k++) {
-                if (a + btnSurroundings[j] >= 0 && a + btnSurroundings[j] < 8 && b + btnSurroundings[k] >= 0 && b + btnSurroundings[k] < 8) {
-                    if (!clickedBtn[8*(a + btnSurroundings[j]) + b + btnSurroundings[k]]) {
-                        click(8*(a + btnSurroundings[j]) + b + btnSurroundings[k], false);
-                    }
+                if (a + btnSurroundings[j] >= 0 && a + btnSurroundings[j] < fieldTileDim && b + btnSurroundings[k] >= 0 && b + btnSurroundings[k] < fieldTileDim) {
+                    click(fieldTileDim*(a + btnSurroundings[j]) + b + btnSurroundings[k]);
                 }
             }
         }
     } 
 }
+
 
 function startTimer(duration, display) {
     var timer = duration, minutes, seconds;
@@ -149,19 +168,22 @@ function startTimer(duration, display) {
 }
 
 function showAllBombs() {
-    for (let i = 0; i < bombPositions.length; i++) {
-        document.getElementById(bombPositions[i]).style.background = "red";
+    for (let i = 0; i < bombArray.length; i++) {
+        if (bombArray[i] === -1) {
+        document.getElementById(i).style.background = "red";
+        }
     }
 }
 
 function checkIfAllSafeTilesAreClicked() {
-    for (let i = 0; i < isBombArray.length; i++) {
-        if (!isBombArray[i] && !clickedBtn[i]) {
+    for (let i = 0; i < bombArray.length; i++) {
+        if (bombArray[i] !== -1 && !tileClicked[i]) {
             return false;
         }
     }
     return true;
 }
+
 
 function checkForVictory() {
     if (bombsMarked == bombsNumber && checkIfAllSafeTilesAreClicked()) {
@@ -169,9 +191,6 @@ function checkForVictory() {
         gameOverFlague = true;
     }
 }
-
-
-
 
 
 
