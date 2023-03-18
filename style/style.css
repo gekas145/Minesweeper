@@ -2,13 +2,23 @@ body {
   background-color: gray;
 }
 
-.main-field {
+#main {
   border: 0.2em solid black;
   height: 32em;
   width: 32em;
-  margin-left: 20em;
-  margin-right: 20em;
+  top: 2em;
+  left: 20em;
   position: absolute;
+}
+
+#canvas {
+  outline: black 3px solid;
+  position: fixed;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
 }
 
 .tile {

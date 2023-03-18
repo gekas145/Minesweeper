@@ -3,7 +3,7 @@ window.onload = function() {
     field = document.getElementById("main");
     fieldTileDim = 8;
 
-    // console.log(window.innerWidth, window.innerHeight);
+    canvas = document.getElementById("canvas");
 
     drawGrid();
 
@@ -50,7 +50,7 @@ function drawGrid(){
 function generateBombs(firstClickedTileId){
     var bombPositions = [];
     while(bombPositions.length < bombsNumber){
-        var r = Math.floor(Math.random() * 63);
+        var r = Math.floor(Math.random() * (bombArray.length-1));
         if(bombPositions.indexOf(r) === -1 && firstClickedTileId !== r) bombPositions.push(r);
     }
 
