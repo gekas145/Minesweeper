@@ -9,7 +9,7 @@ var engine = new ExplosionEngine(canvas);
 function canvasClicked(event){
 
     let coords = getCanvasRelativeCoords(event.clientX, event.clientY);
-
+    let canvas = document.getElementById("canvas");
     engine.processExplosion(new Explosion(coords.x, coords.y, canvas));
 }
 
