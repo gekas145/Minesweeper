@@ -19,7 +19,17 @@ export default class ExplosionEngine{
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.explosions.forEach(explosion => {explosion.explode()});
-        this.explosions = this.explosions.filter(explosion => explosion.particles[0].alpha > 0);
+        // this.explosions = this.explosions.filter(explosion => explosion.particles[0].alpha > 0);
+
+        let explosions = [];
+        for(const explosion of this.explosions) {
+            if (explosion.isFinished()) {
+                explosion.finish();
+                continue;
+            }
+            explosions.push(explosion);
+        }
+        this.explosions = explosions;
 
         if (this.explosions.length === 0){
             clearInterval(this.runId);

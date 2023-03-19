@@ -13,7 +13,7 @@ export default class Particle {
         let ctx = this.canvas.getContext("2d");
         ctx.save();
         ctx.globalAlpha = this.alpha;
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = "#33160F";
         
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);

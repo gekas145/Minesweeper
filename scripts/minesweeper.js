@@ -13,6 +13,7 @@ var gameOverFlague = false;
 var btnSurroundings = [1, 0, -1];
 
 var firstClick = true;
+var clickedBombId = null;
 
 var timer = document.getElementById("timer");
 
@@ -114,6 +115,7 @@ function click(id) {
     if (bombArray[id] === -1) {
         gameOverFlague = true;
         tileClicked[id] = true;
+        clickedBombId = parseInt(id);
         return;
     }
 
@@ -150,25 +152,32 @@ function startTimer(duration, display) {
 
         if (gameOverFlague || --timer < 0) {
             gameOverFlague = true;
-            let explode = false;
             if (checkForVictory()) {
                 document.getElementById("victory").style.display = "block";
             } else {
                 document.getElementById("game-over").style.display = "block";
-                explode = true;
             }
-            showAllBombs(explode);
+            showAllBombs();
             clearInterval(timerProcess);
         }
     }, 1000);
 }
 
-function showAllBombs(explode) {
+function showAllBombs() {
     document.getElementById("canvas").style.zIndex = 1;
+
+    if (clickedBombId !== null) {
+        setTimeout(() => {delayedExplosion(clickedBombId)}, 100);
+    }
+
     for (let i = 0; i < bombArray.length; i++) {
         if (bombArray[i] === -1) {
-            if (explode){
+            if (i === clickedBombId) {
+                continue;
+            }
+            if (clickedBombId !== null){
                 setTimeout(() => {delayedExplosion(i)}, getRandomInt());
+                continue;
             } else {
                 document.getElementById(i).style.background = "red";
             }
@@ -176,14 +185,14 @@ function showAllBombs(explode) {
     }
 }
 
-function delayedExplosion(idx) {
-    let tile = document.getElementById(idx);
+function delayedExplosion(tileId) {
+    let tile = document.getElementById(tileId);
     let rect = tile.getBoundingClientRect();
     let coords = getCanvasRelativeCoords(rect.left + rect.width/2,
                                          rect.top + rect.height/2);
-    let explosion = new Explosion(coords.x, coords.y, document.getElementById("canvas"));
+
+    let explosion = new Explosion(coords.x, coords.y, tileId, document.getElementById("canvas"));
     engine.processExplosion(explosion);
-    tile.style.background = "red";
 }
 
 function checkIfAllSafeTilesAreClicked() {
