@@ -6,13 +6,12 @@ export default class Particle {
         this.radius = Math.random() * 3;
         this.dx = (Math.random() - 0.5) * (Math.random() * 6);
         this.dy = (Math.random() - 0.5) * (Math.random() * 6);
-        this.alpha = 1;
         this.canvas = canvas;
     }
-    draw() {
+    draw(alpha) {
         let ctx = this.canvas.getContext("2d");
         ctx.save();
-        ctx.globalAlpha = this.alpha;
+        ctx.globalAlpha = alpha;
         ctx.fillStyle = "#33160F";
         
         ctx.beginPath();
@@ -20,9 +19,8 @@ export default class Particle {
         ctx.fill();
         ctx.restore();
     }
-    update() {
-        this.draw();
-        this.alpha -= 0.1;
+    update(alpha) {
+        this.draw(alpha);
         this.x += this.dx;
         this.y += this.dy;
     }

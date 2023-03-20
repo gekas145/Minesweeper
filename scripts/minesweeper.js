@@ -1,6 +1,7 @@
 import ExplosionEngine from "./ExplosionEngine.js";
 import Explosion from "./Explosion.js";
 
+
 var field = document.getElementById("main");
 var fieldTileDim = 8;
 
@@ -21,6 +22,15 @@ var bombArray = new Array(fieldTileDim**2).fill(0);
 var tileClicked = new Array(fieldTileDim**2).fill(false);
 var bombsNumber = 10;
 var bombsMarked = 0;
+var tileTextColors = {"0": "#00AB41",
+                      "1": "#043199",
+                      "2": "#0542CC",
+                      "3": "#FFDF00",
+                      "4": "#FFA700",
+                      "5": "#FFA500",
+                      "6": "#990000",
+                      "7": "#800000",
+                      "8": "black"};
 
 window.oncontextmenu = function (){
     return false; // cancel context menu appearence on right mouse button click
@@ -40,6 +50,7 @@ function drawGrid(){
             tile.style.width = tileEdgeLength + "px";
             tile.style.height = tileEdgeLength + "px";
             tile.onmousedown = clickTile;
+            tile.appendChild(document.createElement("span"));
 
             field.appendChild(tile);
             k += 1;
@@ -83,11 +94,11 @@ function assignTileNumbers(){
 
 function clickTile(event) {
     if (event.button === 2 && !gameOverFlague && !tileClicked[this.id]) {
-        if (this.innerHTML === "B") {
-            this.innerHTML = "";
+        if (this.firstElementChild.innerHTML === "B") {
+            this.firstElementChild.innerHTML = "";
             bombsMarked -= bombArray[this.id] === -1;
         } else {
-            this.innerHTML = "B";
+            this.firstElementChild.innerHTML = "B";
             bombsMarked += bombArray[this.id] === -1;
         }
         checkForVictory();
@@ -119,9 +130,12 @@ function click(id) {
         return;
     }
 
-    var color = "green";
-    document.getElementById(id).innerHTML = bombArray[id];
-    document.getElementById(id).style.background = color;
+    let tile = document.getElementById(id);
+    tile.style.background = "#00AB41";
+    tile.style.fontWeight = "bold";
+    tile.firstElementChild.innerHTML = bombArray[id];
+    tile.firstElementChild.style.color = tileTextColors[bombArray[id]];
+    // document.getElementById(id).style.background = tileTextColors[bombArray[id]];
     tileClicked[id] = true;
 
     if (bombArray[id] === 0) {
@@ -226,7 +240,7 @@ function getCanvasRelativeCoords(x, y) {
     };
 }
 
-function getRandomInt(min=1000, max=5000) {
+function getRandomInt(min=1000, max=3000) {
     return Math.floor(Math.random() * (max - min) + min);
   }
 
