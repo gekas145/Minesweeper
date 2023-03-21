@@ -1,6 +1,21 @@
 import ExplosionEngine from "./ExplosionEngine.js";
 import Explosion from "./Explosion.js";
 
+// window.onresize = () => {
+//     let canvas = document.getElementById("canvas");
+//     console.log(canvas.width, canvas.height);
+//     let rect = canvas.getBoundingClientRect();
+//     console.log(rect.width, rect.height);
+//     console.log(window.innerWidth, window.innerHeight);
+// }
+
+// window.onscroll = () => {
+//     let tile = document.getElementById("0");
+//     let rect = tile.getBoundingClientRect();
+//     console.log(rect.left, rect.top);
+//     console.log(getCanvasRelativeCoords(rect.left, rect.top));
+// }
+
 
 var field = document.getElementById("main");
 var fieldTileDim = 8;
@@ -135,7 +150,6 @@ function click(id) {
     tile.style.fontWeight = "bold";
     tile.firstElementChild.innerHTML = bombArray[id];
     tile.firstElementChild.style.color = tileTextColors[bombArray[id]];
-    // document.getElementById(id).style.background = tileTextColors[bombArray[id]];
     tileClicked[id] = true;
 
     if (bombArray[id] === 0) {
@@ -201,11 +215,7 @@ function showAllBombs() {
 
 function delayedExplosion(tileId) {
     let tile = document.getElementById(tileId);
-    let rect = tile.getBoundingClientRect();
-    let coords = getCanvasRelativeCoords(rect.left + rect.width/2,
-                                         rect.top + rect.height/2);
-
-    let explosion = new Explosion(coords.x, coords.y, tileId, document.getElementById("canvas"));
+    let explosion = new Explosion(tile, document.getElementById("canvas"));
     engine.processExplosion(explosion);
 }
 
@@ -225,19 +235,6 @@ function checkForVictory() {
         return true;
     }
     return false;
-}
-
-function getCanvasRelativeCoords(x, y) {
-    let canvas = document.getElementById("canvas");
-    let rect = canvas.getBoundingClientRect();
-
-    const canvasRelativeX = x * canvas.width / rect.width;
-    const canvasRelativeY = y * canvas.height / rect.height;
-
-    return {
-        "x": canvasRelativeX,
-        "y": canvasRelativeY
-    };
 }
 
 function getRandomInt(min=1000, max=3000) {
