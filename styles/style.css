@@ -33,6 +33,11 @@ body {
   position: absolute;
 }
 
+#pc-rules {
+  display: none;
+  position: inherit;
+}
+
 #game-over {
   display: none;
   position: absolute;
@@ -60,4 +65,11 @@ body {
   left: 50em;
   top: 5em;
   font-size: 1.2em;
+}
+
+#radio-buttons-div {
+  display: none;
+  position: absolute;
+  left: 60em;
+  top: 10em;
 }

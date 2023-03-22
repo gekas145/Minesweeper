@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="styles/style.css">
     <script src="scripts/minesweeper.js" type="module" defer></script>
     <script src="scripts/ExplosionEngine.js" type="module" defer></script>
     <script src="scripts/Particle.js" type="module" defer></script>
@@ -16,6 +16,7 @@
     <div id="info">
         <h1>Minesweeper</h1>
         <p>You have 5 minutes to locate all of 10 bombs!</p>
+        <p id="pc-rules">Reveal with left click, mark with right click</p>
         <div id="victory">
             Victory!
             <p>Refresh to restart</p>
@@ -30,6 +31,17 @@
     
     <div id="main"></div>
 
+    <div id="radio-buttons-div">
+        <div>
+            <input type="radio" id="reveal" name="move-type" checked>
+            <label for="reveal">Reveal</label>
+        </div>
+
+        <div>
+            <input type="radio" id="mark" name="move-type">
+            <label for="mark">Mark</label>
+        </div>
+</div>
 
     <div id="timer">
         05:00

@@ -1,6 +1,11 @@
 import ExplosionEngine from "./ExplosionEngine.js";
 import Explosion from "./Explosion.js";
 
+
+window.oncontextmenu = function (){
+    return false; // cancel context menu appearence on right mouse button click
+}
+
 // window.onresize = () => {
 //     let canvas = document.getElementById("canvas");
 //     console.log(canvas.width, canvas.height);
@@ -15,6 +20,14 @@ import Explosion from "./Explosion.js";
 //     console.log(rect.left, rect.top);
 //     console.log(getCanvasRelativeCoords(rect.left, rect.top));
 // }
+
+var markBtn = document.getElementById("mark");
+const isMobile = navigator.maxTouchPoints > 1;
+if (isMobile) {
+    document.getElementById("radio-buttons-div").style.display = "block";   
+} else {
+    document.getElementById("pc-rules").style.display = "block";
+}
 
 
 var field = document.getElementById("main");
@@ -46,10 +59,6 @@ var tileTextColors = {"0": "#00AB41",
                       "6": "#990000",
                       "7": "#800000",
                       "8": "black"};
-
-window.oncontextmenu = function (){
-    return false; // cancel context menu appearence on right mouse button click
-}
 
 function drawGrid(){
     var k = 0;
@@ -108,7 +117,14 @@ function assignTileNumbers(){
 
 
 function clickTile(event) {
-    if (event.button === 2 && !gameOverFlague && !tileClicked[this.id]) {
+    let mark = true;
+    if (isMobile) {
+        mark = markBtn.checked;
+    } else {
+        mark = event.button === 2;
+    }
+
+    if (mark && !gameOverFlague && !tileClicked[this.id]) {
         if (this.firstElementChild.innerHTML === "B") {
             this.firstElementChild.innerHTML = "";
             bombsMarked -= bombArray[this.id] === -1;
