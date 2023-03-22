@@ -6,21 +6,6 @@ window.oncontextmenu = function (){
     return false; // cancel context menu appearence on right mouse button click
 }
 
-// window.onresize = () => {
-//     let canvas = document.getElementById("canvas");
-//     console.log(canvas.width, canvas.height);
-//     let rect = canvas.getBoundingClientRect();
-//     console.log(rect.width, rect.height);
-//     console.log(window.innerWidth, window.innerHeight);
-// }
-
-// window.onscroll = () => {
-//     let tile = document.getElementById("0");
-//     let rect = tile.getBoundingClientRect();
-//     console.log(rect.left, rect.top);
-//     console.log(getCanvasRelativeCoords(rect.left, rect.top));
-// }
-
 var markBtn = document.getElementById("mark");
 const isMobile = navigator.maxTouchPoints > 1;
 if (isMobile) {
@@ -55,9 +40,9 @@ var tileTextColors = {"0": "#00AB41",
                       "2": "#0542CC",
                       "3": "#FFDF00",
                       "4": "#FFA700",
-                      "5": "#FFA500",
+                      "5": "#DFBD69",
                       "6": "#990000",
-                      "7": "#800000",
+                      "7": "#005900",
                       "8": "black"};
 
 function drawGrid(){
@@ -95,7 +80,7 @@ function generateBombs(firstClickedTileId){
 }
 
 function assignTileNumbers(){
-    for (let i = 0; i < 64; i++) {
+    for (let i = 0; i < fieldTileDim**2; i++) {
         let a = Math.floor(i / fieldTileDim);
         let b = i % fieldTileDim;
 
